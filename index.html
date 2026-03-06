@@ -9,31 +9,35 @@
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-repeat: no-repeat; background-attachment: fixed; background-position: center;
-            background-color: #1a4d2e;
+            background-repeat: no-repeat; background-attachment: fixed;
+            background-position: center; background-color: #1a4d2e;
         }
-        
-        /* PC */
         @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: cover; } }
         
-        /* MÓVIL: Botón más pequeño para ver logos */
+        /* AJUSTE PARA TELÉFONO: Botón más pequeño y compacto */
         @media (max-width: 600px) { 
             body { background-image: url('TU_URL_MOVIL'); background-size: cover; } 
-            #btn_subir { padding: 12px 20px !important; font-size: 16px !important; }
+            #btn_subir { 
+                padding: 10px 20px !important; /* Más pequeño */
+                font-size: 14px !important;    /* Texto más pequeño */
+                border-radius: 8px !important;
+            }
         }
-
+        
         #btn_subir { 
-            padding: 20px 40px; font-size: 20px;
-            background: rgba(220, 38, 38, 0.6);
+            padding: 15px 30px; font-size: 18px;
+            background: rgba(220, 38, 38, 0.7);
             backdrop-filter: blur(5px);
             border: 2px solid rgba(255, 255, 255, 0.5);
-            color: white; border-radius: 15px; cursor: pointer; font-weight: bold;
+            color: white; border-radius: 12px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; gap: 8px;
+            transition: 0.3s;
         }
     </style>
 </head>
 <body>
 
-    <button id="btn_subir">LICENCIAS VENCIDAS</button>
+    <button id="btn_subir">📷 LICENCIAS VENCIDAS</button>
 
     <script>
         const widget = cloudinary.createUploadWidget({
@@ -41,12 +45,15 @@
             uploadPreset: 'licencias vencidas',
             sources: ['camera', 'local'],
             clientAllowedFormats: ["jpg", "jpeg", "png"],
-            cameraParameters: { capture: 'environment' },
+            cameraParameters: { capture: 'environment' }, // Forzar cámara trasera
+            styles: {
+                palette: { window: "#000000", windowBorder: "#90a0b3", tabIcon: "#FFFFFF", menuIcons: "#FFFFFF", textDark: "#FFFFFF", textLight: "#FFFFFF", action: "#DC2626" }
+            },
             language: "es",
             text: { "es": { "menu": { "camera": "Tomar Foto", "local": "Buscar Archivos" } } }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
-                alert("Subido: " + result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/"));
+                alert("Subido exitosamente: " + result.info.secure_url);
             }
         });
 
