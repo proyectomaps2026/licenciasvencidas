@@ -9,56 +9,70 @@
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-color: #DC2626; /* Fondo rojo solicitado */
+            background-color: #DC2626;
             background-repeat: no-repeat; background-position: center;
         }
 
         /* PC: Imagen ajustada */
-        @media (min-width: 601px) { 
-            body { background-image: url('TU_URL_PC'); background-size: contain; } 
-        }
+        @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: contain; } }
         
-        /* MÓVIL: Imagen reducida al 85% para ver bordes rojos */
+        /* MÓVIL: Imagen al 85% para ver bordes rojos */
         @media (max-width: 600px) { 
-            body { 
-                background-image: url('TU_URL_MOVIL'); 
-                background-size: 85% auto; 
-            } 
+            body { background-image: url('TU_URL_MOVIL'); background-size: 85% auto; } 
             #btn_subir { padding: 10px 20px !important; font-size: 14px !important; }
         }
-        
+
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
             background: rgba(0, 0, 0, 0.4); border: 2px solid white;
             color: white; border-radius: 12px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
         }
+
+        #resultado { display: none; text-align: center; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; width: 80%; }
+        #linkGenerado { width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; text-align: center; }
+        #btn_copiar { padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <button id="btn_subir">📷 CARGAR LICENCIA</button>
+    <button id="btn_subir">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        CARGAR LICENCIA
+    </button>
+
+    <div id="resultado">
+        <input type="text" id="linkGenerado" readonly>
+        <button id="btn_copiar">📋 COPIAR LINK</button>
+    </div>
 
     <script>
-        // Configuración blindada para forzar cámara trasera y asegurar funcionalidad
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera', 'local'], // Habilita cámara y archivos
-            showAdvancedOptions: true,     // Obliga a mostrar opciones de cámara
-            cropping: false,
-            multiple: false,
+            sources: ['camera', 'local'], // FUENTE: Cámara y archivos
+            showAdvancedOptions: true,
             clientAllowedFormats: ["jpg", "jpeg", "png"],
-            cameraParameters: { capture: 'environment' } // Fuerza cámara trasera
+            cameraParameters: { capture: 'environment' } // FORZAR CÁMARA TRASERA
         }, (error, result) => {
             if (!error && result && result.event === "success") {
-                alert("¡Licencia subida con éxito!");
+                document.getElementById('resultado').style.display = 'block';
+                document.getElementById('linkGenerado').value = result.info.secure_url;
             }
         });
 
-        // Evento de disparo seguro
-        document.getElementById("btn_subir").addEventListener("click", function() {
-            widget.open();
+        document.getElementById("btn_subir").addEventListener("click", () => widget.open());
+
+        document.getElementById("btn_copiar").addEventListener("click", () => {
+            const link = document.getElementById("linkGenerado");
+            link.select();
+            document.execCommand("copy");
+            const btn = document.getElementById("btn_copiar");
+            btn.innerText = "✅ ¡COPIADO!";
+            setTimeout(() => { btn.innerText = "📋 COPIAR LINK"; }, 2000);
         });
     </script>
 </body>
