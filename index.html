@@ -14,23 +14,28 @@
             background-color: #1a4d2e; 
         }
 
-        /* FONDO PC (Horizontal) */
+        /* FONDO ADAPTABLE */
         @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: cover; } }
-        /* FONDO MÓVIL (Vertical) */
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: contain; background-position: top center; } }
+        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: cover; background-position: center center; } }
         
+        /* BOTÓN TRASLÚCIDO (GLASS) */
         #btn_subir { 
-            padding: 20px 40px; font-size: 20px; background: #dc2626; color: white; 
-            border: none; border-radius: 15px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            transition: 0.2s; z-index: 10;
+            padding: 20px 40px; font-size: 20px; 
+            background: rgba(220, 38, 38, 0.7); /* Rojo con transparencia */
+            color: white; border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; gap: 12px;
+            backdrop-filter: blur(8px); /* Efecto vidrio */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s; z-index: 10;
         }
         #btn_subir:active { transform: scale(0.95); }
         .icon-cam { width: 28px; height: 28px; fill: none; stroke: white; stroke-width: 2.5; }
 
         #resultado { 
             margin-top: 25px; display: none; text-align: center; width: 90%; max-width: 400px; 
-            background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 15px; border: 1px solid #ffffff33; backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
         }
         #linkGenerado { width: 100%; padding: 12px; background: #000; color: #00ff00; border: 1px solid #333; border-radius: 8px; text-align: center; font-family: monospace; font-size: 13px; margin-bottom: 12px; }
         #btn_copiar { width: 100%; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -53,18 +58,16 @@
             const widget = cloudinary.createUploadWidget({
                 cloudName: 'dllkhcwzt',
                 uploadPreset: 'licencias vencidas',
-                sources: ['camera', 'local'], // Permite cámara Y archivos
-                clientAllowedFormats: ["jpg", "jpeg", "png"], // PROHÍBE VIDEO
-                cameraParameters: { capture: 'environment' }, // Forzar cámara trasera
+                sources: ['camera', 'local'], // Foto o Archivos
+                clientAllowedFormats: ["jpg", "jpeg", "png"], // Solo fotos
+                cameraParameters: { capture: 'environment' }, // Cámara trasera
                 language: "es",
                 text: { "es": { "menu": { "camera": "Tomar Foto", "local": "Buscar en Archivos" } } },
                 styles: { palette: { window: "#000000", sourceBg: "#000000", action: "#DC2626" } }
             }, (error, result) => {
                 if (!error && result && result.event === "success") {
                     const resDiv = document.getElementById('resultado');
-                    const linkInput = document.getElementById('linkGenerado');
-                    
-                    // COMPRESIÓN SÚPER RÁPIDA: f_auto,q_auto
+                    const linkInput = document.getElementById('linkGenerado');// COMPRESIÓN AUTOMÁTICA
                     let urlFinal = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
                     
                     resDiv.style.display = 'block';
@@ -72,7 +75,9 @@
                 }
             });
 
-            document.getElementById("btn_subir").addEventListener("click", () => widget.open());document.getElementById("btn_copiar").addEventListener("click", () => {
+            document.getElementById("btn_subir").addEventListener("click", () => widget.open());
+
+            document.getElementById("btn_copiar").addEventListener("click", () => {
                 const link = document.getElementById("linkGenerado");
                 link.select();
                 navigator.clipboard.writeText(link.value);
