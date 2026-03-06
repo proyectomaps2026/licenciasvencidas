@@ -2,49 +2,56 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Carga Licencias Vencidas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carga Licencias</title>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript" defer></script>
     <style>
-        * { box-sizing: border-box; }
         body { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden;
-            background-repeat: no-repeat; background-attachment: fixed; background-position: center center;
-            background-color: #1a4d2e; 
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-repeat: no-repeat; background-attachment: fixed;
+            background-color: #1a4d2e;
         }
 
-        /* FONDO ADAPTABLE */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: cover; } }
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: cover; background-position: center center; } }
-        
-        /* BOTÓN TRASLÚCIDO (GLASS) */
+        /* FONDO PC */
+        @media (min-width: 601px) { 
+            body { background-image: url('URL_PC'); background-size: cover; background-position: center; } 
+        }
+
+        /* FONDO MÓVIL: Forzamos 'cover' y centrado para que no se deforme */
+        @media (max-width: 600px) { 
+            body { background-image: url('URL_MOVIL'); background-size: cover; background-position: center; } 
+        }
+
+        /* BOTÓN GLASSMORPHISM REAL */
         #btn_subir { 
-            padding: 20px 40px; font-size: 20px; 
-            background: rgba(220, 38, 38, 0.7); /* Rojo con transparencia */
-            color: white; border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px; cursor: pointer; font-weight: bold;
+            padding: 20px 40px; font-size: 20px;
+            /* Color rojo con transparencia real */
+            background: rgba(220, 38, 38, 0.4); 
+            /* Desenfoque de fondo (Glass) */
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; border-radius: 20px; cursor: pointer; font-weight: bold;
             display: flex; align-items: center; gap: 12px;
-            backdrop-filter: blur(8px); /* Efecto vidrio */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: 0.3s; z-index: 10;
         }
-        #btn_subir:active { transform: scale(0.95); }
-        .icon-cam { width: 28px; height: 28px; fill: none; stroke: white; stroke-width: 2.5; }
+        #btn_subir:hover { background: rgba(220, 38, 38, 0.6); }
 
         #resultado { 
             margin-top: 25px; display: none; text-align: center; width: 90%; max-width: 400px; 
-            background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 15px; 
-            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
         }
-        #linkGenerado { width: 100%; padding: 12px; background: #000; color: #00ff00; border: 1px solid #333; border-radius: 8px; text-align: center; font-family: monospace; font-size: 13px; margin-bottom: 12px; }
+        #linkGenerado { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); color: #00ff00; border: 1px solid #333; border-radius: 8px; text-align: center; font-family: monospace; }
         #btn_copiar { width: 100%; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <button id="btn_subir">
-        <svg class="icon-cam" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        <svg style="width:28px; height:28px; fill:none; stroke:white; stroke-width:2.5;" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
         LICENCIAS VENCIDAS
     </button>
 
@@ -58,26 +65,17 @@
             const widget = cloudinary.createUploadWidget({
                 cloudName: 'dllkhcwzt',
                 uploadPreset: 'licencias vencidas',
-                sources: ['camera', 'local'], // Foto o Archivos
-                clientAllowedFormats: ["jpg", "jpeg", "png"], // Solo fotos
-                cameraParameters: { capture: 'environment' }, // Cámara trasera
+                sources: ['camera', 'local'],
+                clientAllowedFormats: ["jpg", "jpeg", "png"],
+                cameraParameters: { capture: 'environment' },
                 language: "es",
-                text: { "es": { "menu": { "camera": "Tomar Foto", "local": "Buscar en Archivos" } } },
-                styles: { palette: { window: "#000000", sourceBg: "#000000", action: "#DC2626" } }
+                text: { "es": { "menu": { "camera": "Tomar Foto", "local": "Buscar Archivos" } } }
             }, (error, result) => {
                 if (!error && result && result.event === "success") {
-                    const resDiv = document.getElementById('resultado');
-                    const linkInput = document.getElementById('linkGenerado');// COMPRESIÓN AUTOMÁTICA
-                    let urlFinal = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
-                    
-                    resDiv.style.display = 'block';
-                    linkInput.value = urlFinal;
+                    document.getElementById('resultado').style.display = 'block';
+                    document.getElementById('linkGenerado').value = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
                 }
-            });
-
-            document.getElementById("btn_subir").addEventListener("click", () => widget.open());
-
-            document.getElementById("btn_copiar").addEventListener("click", () => {
+            });document.getElementById("btn_copiar").addEventListener("click", () => {
                 const link = document.getElementById("linkGenerado");
                 link.select();
                 navigator.clipboard.writeText(link.value);
@@ -89,3 +87,5 @@
     </script>
 </body>
 </html>
+
+            document.getElementById("btn_subir").addEventListener("click", () => widget.open());
