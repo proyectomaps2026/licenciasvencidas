@@ -6,52 +6,53 @@
     <title>Carga Licencias Vencidas</title>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript" defer></script>
     <style>
+        * { box-sizing: border-box; }
         body { 
-            /* Ajuste inteligente de fondo */
+            /* CONFIGURACIÓN DE FONDO PROFESIONAL */
             background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png');
             background-repeat: no-repeat;
             background-position: center center;
             background-attachment: fixed;
-            background-size: cover; /* En PC llena todo */
+            background-size: cover; /* Se adapta a PC */
+            background-color: #1a4d2e; 
             
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            height: 100vh; margin: 0; font-family: sans-serif; 
+            height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden;
         }
 
-        /* Ajuste especial para celulares */
+        /* Ajuste para que en el celular se vea la imagen COMPLETA */
         @media (max-width: 600px) {
             body {
-                background-size: contain; /* En móvil muestra la imagen completa sin zoom feo */
-                background-color: #1a4d2e; /* Color verde de fondo por si sobran espacios */
+                background-size: contain; /* Evita el zoom feo en el móvil */
+                background-position: top center;
             }
-            #btn_subir { width: 80%; justify-content: center; }
         }
         
         #btn_subir { 
-            padding: 20px 30px; font-size: 20px; background: #dc2626; color: white; 
-            border: none; border-radius: 12px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            transition: 0.2s;
+            padding: 20px 35px; font-size: 22px; background: #dc2626; color: white; 
+            border: none; border-radius: 15px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            transition: 0.3s; z-index: 10;
         }
         
         #btn_subir:active { transform: scale(0.95); }
-        .icon-cam { width: 28px; height: 28px; fill: none; stroke: white; stroke-width: 2.5; }
+        .icon-cam { width: 30px; height: 30px; fill: none; stroke: white; stroke-width: 2.5; }
 
         #resultado { 
-            margin-top: 20px; display: none; text-align: center; width: 85%; max-width: 400px; 
-            background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 15px; 
-            border: 1px solid #ffffff33; backdrop-filter: blur(5px);
+            margin-top: 25px; display: none; text-align: center; width: 90%; max-width: 420px; 
+            background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
         }
 
         #linkGenerado { 
-            width: 100%; padding: 12px; background: #000; color: #00ff00; 
-            border: 1px solid #333; border-radius: 8px; text-align: center; 
-            font-family: monospace; font-size: 13px; margin-bottom: 12px; box-sizing: border-box;
+            width: 100%; padding: 12px; background: #000; color: #38bdf8; 
+            border: 1px solid #1e293b; border-radius: 10px; text-align: center; 
+            font-family: monospace; font-size: 14px; margin-bottom: 15px;
         }
 
         #btn_copiar { 
-            width: 100%; padding: 12px; background: #059669; color: white; 
-            border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+            width: 100%; padding: 14px; background: #059669; color: white; 
+            border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px;
         }
     </style>
 </head>
@@ -76,28 +77,36 @@
                 cloudName: 'dllkhcwzt',
                 uploadPreset: 'licencias vencidas',
                 sources: ['camera', 'local'],
+                // FORZAR SOLO FOTOS (evita que pida grabar video)
+                clientAllowedFormats: ["jpg", "jpeg", "png"], 
+                maxImageFileSize: 3000000, 
                 language: "es",
-                clientAllowedFormats: ["jpg", "jpeg", "png"],
-                styles: { palette: { window: "#000000", sourceBg: "#000000", action: "#DC2626" } }
+                text: { "es": { "menu": { "camera": "Tomar Foto" } } },
+                styles: { palette: { window: "#0F172A", sourceBg: "#1E293B", action: "#DC2626" } }
             }, (error, result) => {
                 if (!error && result && result.event === "success") {
                     const resDiv = document.getElementById('resultado');
-                    const linkInput = document.getElementById('linkGenerado');
-                    
-                    // COMPRESIÓN MÁXIMA PARA VELOCIDAD
-                    let urlLimpia = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
+                    const linkInput = document.getElementById('linkGenerado');// COMPRESIÓN AL INSTANTE: f_auto (formato) y q_auto (calidad)
+                    let urlOptimizada = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
                     
                     resDiv.style.display = 'block';
-                    linkInput.value = urlLimpia;
+                    linkInput.value = urlOptimizada;
                 }
             });
 
-            document.getElementById("btn_subir").addEventListener("click", () => widget.open());document.getElementById("btn_copiar").addEventListener("click", () => {
-                const link = document.getElementById("linkGenerado");
-                navigator.clipboard.writeText(link.value);
+            document.getElementById("btn_subir").addEventListener("click", () => widget.open());
+
+            document.getElementById("btn_copiar").addEventListener("click", () => {
+                const copyText = document.getElementById("linkGenerado");
+                copyText.select();
+                navigator.clipboard.writeText(copyText.value);
                 const btn = document.getElementById("btn_copiar");
                 btn.innerText = "✅ ¡COPIADO!";
-                setTimeout(() => btn.innerText = "📋 COPIAR LINK", 2000);
+                btn.style.background = "#2563eb";
+                setTimeout(() => { 
+                    btn.innerText = "📋 COPIAR LINK"; 
+                    btn.style.background = "#059669";
+                }, 2000);
             });
         });
     </script>
