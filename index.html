@@ -2,58 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carga Licencias Vencidas</title>
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript" defer></script>
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     <style>
-        * { box-sizing: border-box; }
         body { 
-            /* CONFIGURACIÓN DE FONDO PROFESIONAL */
-            background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed;
-            background-size: cover; /* Se adapta a PC */
-            background-color: #1a4d2e; 
-            
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden;
-        }
-
-        /* Ajuste para que en el celular se vea la imagen COMPLETA */
-        @media (max-width: 600px) {
-            body {
-                background-size: contain; /* Evita el zoom feo en el móvil */
-                background-position: top center;
-            }
+            background: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png') no-repeat center center fixed; 
+            background-size: cover;
+            display: flex; align-items: center; justify-content: center; 
+            height: 100vh; margin: 0; font-family: sans-serif; 
         }
         
         #btn_subir { 
-            padding: 20px 35px; font-size: 22px; background: #dc2626; color: white; 
+            padding: 20px 40px; font-size: 22px; background: #dc2626; color: white; 
             border: none; border-radius: 15px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: 0.3s; z-index: 10;
+            display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         
-        #btn_subir:active { transform: scale(0.95); }
-        .icon-cam { width: 30px; height: 30px; fill: none; stroke: white; stroke-width: 2.5; }
+        .icon-cam { width: 30px; height: 30px; fill: none; stroke: white; stroke-width: 2; }
 
-        #resultado { 
-            margin-top: 25px; display: none; text-align: center; width: 90%; max-width: 420px; 
-            background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-        }
-
-        #linkGenerado { 
-            width: 100%; padding: 12px; background: #000; color: #38bdf8; 
-            border: 1px solid #1e293b; border-radius: 10px; text-align: center; 
-            font-family: monospace; font-size: 14px; margin-bottom: 15px;
-        }
-
-        #btn_copiar { 
-            width: 100%; padding: 14px; background: #059669; color: white; 
-            border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px;
-        }
+        #resultado { margin-top: 25px; display: none; text-align: center; width: 80%; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;}
+        #linkGenerado { width: 100%; padding: 12px; background: #1e293b; color: white; border: 1px solid #475569; border-radius: 8px; text-align: center; box-sizing: border-box; }
+        #btn_copiar { margin-top: 15px; padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -68,47 +37,35 @@
 
     <div id="resultado">
         <input type="text" id="linkGenerado" readonly>
-        <button id="btn_copiar">📋 COPIAR LINK</button>
+        <br>
+        <button id="btn_copiar" onclick="copiarLink()">📋 COPIAR LINK</button>
     </div>
 
     <script type="text/javascript">
-        window.addEventListener('load', () => {
-            const widget = cloudinary.createUploadWidget({
-                cloudName: 'dllkhcwzt',
-                uploadPreset: 'licencias vencidas',
-                sources: ['camera', 'local'],
-                // FORZAR SOLO FOTOS (evita que pida grabar video)
-                clientAllowedFormats: ["jpg", "jpeg", "png"], 
-                maxImageFileSize: 3000000, 
-                language: "es",
-                text: { "es": { "menu": { "camera": "Tomar Foto" } } },
-                styles: { palette: { window: "#0F172A", sourceBg: "#1E293B", action: "#DC2626" } }
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    const resDiv = document.getElementById('resultado');
-                    const linkInput = document.getElementById('linkGenerado');// COMPRESIÓN AL INSTANTE: f_auto (formato) y q_auto (calidad)
-                    let urlOptimizada = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
-                    
-                    resDiv.style.display = 'block';
-                    linkInput.value = urlOptimizada;
-                }
-            });
-
-            document.getElementById("btn_subir").addEventListener("click", () => widget.open());
-
-            document.getElementById("btn_copiar").addEventListener("click", () => {
-                const copyText = document.getElementById("linkGenerado");
-                copyText.select();
-                navigator.clipboard.writeText(copyText.value);
-                const btn = document.getElementById("btn_copiar");
-                btn.innerText = "✅ ¡COPIADO!";
-                btn.style.background = "#2563eb";
-                setTimeout(() => { 
-                    btn.innerText = "📋 COPIAR LINK"; 
-                    btn.style.background = "#059669";
-                }, 2000);
-            });
+        // Widget configurado para abrir la cámara primero
+        const widget = cloudinary.createUploadWidget({
+            cloudName: 'dllkhcwzt',
+            uploadPreset: 'licencias vencidas',
+            sources: ['camera', 'local'], // Prioriza 'camera'
+            showAdvancedOptions: false,
+            cropping: true
+        }, (error, result) => {
+            if (!error && result && result.event === "success") {
+                document.getElementById('resultado').style.display = 'block';
+                document.getElementById('linkGenerado').value = result.info.secure_url;
+            }
         });
+
+        document.getElementById("btn_subir").addEventListener("click", () => {
+            widget.open();
+        });
+
+        function copiarLink() {
+            const copyText = document.getElementById("linkGenerado");
+            copyText.select();
+            document.execCommand("copy");
+            alert("¡Link copiado al portapapeles!");
+        }
     </script>
 </body>
 </html>
