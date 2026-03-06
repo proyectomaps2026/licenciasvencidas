@@ -2,70 +2,88 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carga Licencias Vencidas</title>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     <style>
         body { 
-            background: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png') no-repeat center center fixed; 
-            background-size: cover;
-            display: flex; align-items: center; justify-content: center; 
-            height: 100vh; margin: 0; font-family: sans-serif; 
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-repeat: no-repeat; background-attachment: fixed; background-position: center center;
+            background-color: #1a4d2e;
+            font-family: sans-serif;
         }
-        
-        #btn_subir { 
-            padding: 20px 40px; font-size: 22px; background: #dc2626; color: white; 
-            border: none; border-radius: 15px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        
-        .icon-cam { width: 30px; height: 30px; fill: none; stroke: white; stroke-width: 2; }
 
-        #resultado { margin-top: 25px; display: none; text-align: center; width: 80%; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px;}
-        #linkGenerado { width: 100%; padding: 12px; background: #1e293b; color: white; border: 1px solid #475569; border-radius: 8px; text-align: center; box-sizing: border-box; }
-        #btn_copiar { margin-top: 15px; padding: 12px 20px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        /* FONDO PC: cover para llenar espacio */
+        @media (min-width: 601px) { 
+            body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: cover; } 
+        }
+
+        /* FONDO MÓVIL: contain para ver la imagen completa sin estirar */
+        @media (max-width: 600px) { 
+            body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: contain; } 
+        }
+
+        /* BOTÓN TRASLÚCIDO MEJORADO */
+        #btn_subir { 
+            padding: 20px 40px; font-size: 20px;
+            background: rgba(220, 38, 38, 0.5); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white; border-radius: 20px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        #btn_subir:hover { background: rgba(220, 38, 38, 0.7); }
+
+        #resultado { 
+            margin-top: 25px; display: none; text-align: center; width: 90%; max-width: 400px; 
+            background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+        }
+        #linkGenerado { width: 100%; padding: 12px; background: #000; color: #00ff00; border: 1px solid #333; border-radius: 8px; text-align: center; font-family: monospace; }
+        #btn_copiar { width: 100%; padding: 12px; margin-top: 10px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <button id="btn_subir">
-        <svg class="icon-cam" viewBox="0 0 24 24">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-        </svg>
-        LICENCIAS VENCIDAS
-    </button>
+    <button id="btn_subir">📷 LICENCIAS VENCIDAS</button>
 
     <div id="resultado">
         <input type="text" id="linkGenerado" readonly>
-        <br>
-        <button id="btn_copiar" onclick="copiarLink()">📋 COPIAR LINK</button>
+        <button id="btn_copiar">📋 COPIAR LINK</button>
     </div>
 
-    <script type="text/javascript">
-        // Widget configurado para abrir la cámara primero
+    <script>
+        // Inicialización segura del Widget
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera', 'local'], // Prioriza 'camera'
-            showAdvancedOptions: false,
-            cropping: true
+            sources: ['camera', 'local'],
+            clientAllowedFormats: ["jpg", "jpeg", "png"],
+            cameraParameters: { capture: 'environment' },
+            language: "es"
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 document.getElementById('resultado').style.display = 'block';
-                document.getElementById('linkGenerado').value = result.info.secure_url;
+                let url = result.info.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
+                document.getElementById('linkGenerado').value = url;
             }
         });
 
-        document.getElementById("btn_subir").addEventListener("click", () => {
-            widget.open();
-        });
+        // Evento del botón de subir
+        document.getElementById("btn_subir").addEventListener("click", () => widget.open());
 
-        function copiarLink() {
-            const copyText = document.getElementById("linkGenerado");
-            copyText.select();
-            document.execCommand("copy");
-            alert("¡Link copiado al portapapeles!");
-        }
+        // Evento de copiado
+        document.getElementById("btn_copiar").addEventListener("click", () => {
+            const link = document.getElementById("linkGenerado");
+            link.select();
+            navigator.clipboard.writeText(link.value);
+            const btn = document.getElementById("btn_copiar");
+            btn.innerText = "✅ ¡COPIADO!";
+            setTimeout(() => btn.innerText = "📋 COPIAR LINK", 2000);
+        });
     </script>
 </body>
 </html>
