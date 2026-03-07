@@ -9,13 +9,13 @@
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-color: #E3F2FD; /* Azul pastel profesional */
+            background-color: #E3F2FD; /* Azul pastel */
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* PC y Móvil: Ajuste al 98% para dejar la línea fina lateral */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
+        /* Ajuste al 98% para línea lateral fina */
+        @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: 98% auto; } }
+        @media (max-width: 600px) { body { background-image: url('TU_URL_MOVIL'); background-size: 98% auto; } }
 
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
@@ -31,13 +31,7 @@
 </head>
 <body>
 
-    <button id="btn_subir">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-        </svg>
-        CARGAR LICENCIA
-    </button>
+    <button id="btn_subir">📷 CARGAR LICENCIA</button>
 
     <div id="resultado">
         <input type="text" id="linkGenerado" readonly>
@@ -48,8 +42,7 @@
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera', 'local', 'url'], // Se añadió 'url' para asegurar más opciones
-            showAdvancedOptions: true,
+            sources: ['camera', 'local'], // FUENTES LIMITADAS PARA FORZAR CÁMARA
             clientAllowedFormats: ["jpg", "jpeg", "png"],
             cameraParameters: { capture: 'environment' }
         }, (error, result) => {
@@ -72,3 +65,6 @@
     </script>
 </body>
 </html>
+</body>
+</html>
+
