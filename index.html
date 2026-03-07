@@ -13,9 +13,9 @@
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* Ajuste fino al 98% */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
+        /* Imágenes ajustadas al 98% para el margen fino */
+        @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: 98% auto; } }
+        @media (max-width: 600px) { body { background-image: url('TU_URL_MOVIL'); background-size: 98% auto; } }
 
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
@@ -45,11 +45,12 @@
     </div>
 
     <script>
+        // Configuración equilibrada: permite cámara y archivos, pero con modo avanzado activado
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera'], // FUENTE ÚNICA: CÁMARA
-            showAdvancedOptions: false, // Ocultamos opciones avanzadas para ir directo al punto
+            sources: ['camera', 'local'], // FUENTES EQUILIBRADAS
+            showAdvancedOptions: true,     // Vital para que aparezca el selector
             clientAllowedFormats: ["jpg", "jpeg", "png"],
             cameraParameters: { capture: 'environment' }
         }, (error, result) => {
