@@ -13,7 +13,7 @@
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* Ajuste fino al 98% */
+        /* Ajuste fino al 98% para línea lateral elegante */
         @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: 98% auto; } }
         @media (max-width: 600px) { body { background-image: url('TU_URL_MOVIL'); background-size: 98% auto; } }
 
@@ -48,11 +48,12 @@
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            // Mantenemos la flexibilidad, pero la cámara es la primera de la lista
-            sources: ['camera', 'local', 'url'], 
-            // ESTO ES LA CLAVE: Forzamos la apertura directa en la cámara
+            // FORZADO TOTAL: Solo permitimos cámara y archivos locales.
+            sources: ['camera', 'local'],
+            // Obligamos a que la cámara sea la opción por defecto.
             defaultSource: 'camera',
             clientAllowedFormats: ["jpg", "jpeg", "png"],
+            // Parámetro para forzar el uso de la cámara trasera
             cameraParameters: { capture: 'environment' }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
