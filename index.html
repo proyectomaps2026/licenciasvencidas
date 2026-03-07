@@ -9,11 +9,11 @@
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-color: #E3F2FD;
+            background-color: #E3F2FD; /* Azul pastel */
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* Imágenes ajustadas al 98% para el margen fino */
+        /* Ajuste de imagen al 98% */
         @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
         @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
 
@@ -45,13 +45,13 @@
     </div>
 
     <script>
-        // Configuración equilibrada: permite cámara y archivos, pero con modo avanzado activado
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera', 'local'], // FUENTES EQUILIBRADAS
-            showAdvancedOptions: true,     // Vital para que aparezca el selector
+            sources: ['camera'], // FUENTE ÚNICA: CÁMARA
+            showAdvancedOptions: false, // Desactivamos opciones avanzadas para que no salga "Browse"
             clientAllowedFormats: ["jpg", "jpeg", "png"],
+            // Parámetro técnico: captura el entorno (cámara trasera) y lo fuerza
             cameraParameters: { capture: 'environment' }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
@@ -73,4 +73,3 @@
     </script>
 </body>
 </html>
-
