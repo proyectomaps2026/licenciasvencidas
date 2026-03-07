@@ -6,17 +6,19 @@
     <title>Carga Licencias</title>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     <style>
+        /* ESTILO GLOBAL: Fondo Azul Pastel Fijo */
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-color: #E3F2FD !important; /* Azul pastel forzado */
+            background-color: #E3F2FD !important; 
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* Ajuste de imagen al 98% */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
+        /* Imágenes ajustadas al 98% para dejar línea fina lateral */
+        @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: 98% auto; } }
+        @media (max-width: 600px) { body { background-image: url('TU_URL_MOVIL'); background-size: 98% auto; } }
 
+        /* Estilo del botón principal */
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
             background: rgba(0, 0, 0, 0.4); border: 2px solid white;
@@ -24,6 +26,7 @@
             display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
         }
 
+        /* Estilo de la caja de resultado */
         #resultado { display: none; text-align: center; background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; width: 85%; }
         #linkGenerado { width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; text-align: center; }
         #btn_copiar { padding: 10px 20px; background: #2563EB; color: white; border: none; border-radius: 5px; cursor: pointer; }
@@ -45,15 +48,14 @@
     </div>
 
     <script>
+        // CONFIGURACIÓN ESTABLE: Cámara y Archivos habilitados
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            // Volvemos a la configuración que permite todo pero forzamos el modo cámara
-            sources: ['camera', 'local'],
+            sources: ['camera', 'local'], // Ambas opciones disponibles
             showAdvancedOptions: true,
             clientAllowedFormats: ["jpg", "jpeg", "png"],
-            // Parámetro de estilo para que el widget se integre mejor
-            styles: { palette: { window: "#E3F2FD", sourceBg: "#E3F2FD" } }
+            cameraParameters: { capture: 'environment' }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 document.getElementById('resultado').style.display = 'block';
@@ -63,6 +65,7 @@
 
         document.getElementById("btn_subir").addEventListener("click", () => widget.open());
 
+        // Función de copiado mejorada
         document.getElementById("btn_copiar").addEventListener("click", () => {
             const link = document.getElementById("linkGenerado");
             link.select();
