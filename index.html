@@ -9,18 +9,13 @@
         body { 
             margin: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-color: #DC2626;
+            background-color: #E3F2FD; /* Azul pastel profesional */
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* PC: Imagen ajustada */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: contain; } }
-        
-        /* MÓVIL: Imagen al 85% para ver bordes rojos */
-        @media (max-width: 600px) { 
-            body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 85% auto; } 
-            #btn_subir { padding: 10px 20px !important; font-size: 14px !important; }
-        }
+        /* PC y Móvil: Ajuste al 98% para dejar la línea fina lateral */
+        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
+        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
 
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
@@ -29,9 +24,9 @@
             display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
         }
 
-        #resultado { display: none; text-align: center; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; width: 80%; }
+        #resultado { display: none; text-align: center; background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; width: 85%; }
         #linkGenerado { width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; text-align: center; }
-        #btn_copiar { padding: 10px 20px; background: #059669; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #btn_copiar { padding: 10px 20px; background: #2563EB; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -53,10 +48,10 @@
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera', 'local'], // FUENTE: Cámara y archivos
+            sources: ['camera', 'local', 'url'], // Se añadió 'url' para asegurar más opciones
             showAdvancedOptions: true,
             clientAllowedFormats: ["jpg", "jpeg", "png"],
-            cameraParameters: { capture: 'environment' } // FORZAR CÁMARA TRASERA
+            cameraParameters: { capture: 'environment' }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 document.getElementById('resultado').style.display = 'block';
@@ -77,4 +72,3 @@
     </script>
 </body>
 </html>
-
