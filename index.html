@@ -13,9 +13,9 @@
             background-repeat: no-repeat; background-position: center;
         }
 
-        /* Ajuste de imagen al 98% */
-        @media (min-width: 601px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772833240/nzxbwtgbj7xwwohsmyxa.png'); background-size: 98% auto; } }
-        @media (max-width: 600px) { body { background-image: url('https://res.cloudinary.com/dllkhcwzt/image/upload/v1772837299/tkeqdm1bqltr7wr4i3oe.png'); background-size: 98% auto; } }
+        /* Ajuste fino al 98% para que se vea el marco azul pastel */
+        @media (min-width: 601px) { body { background-image: url('TU_URL_PC'); background-size: 98% auto; } }
+        @media (max-width: 600px) { body { background-image: url('TU_URL_MOVIL'); background-size: 98% auto; } }
 
         #btn_subir { 
             padding: 15px 30px; font-size: 18px;
@@ -45,13 +45,16 @@
     </div>
 
     <script>
+        // Configuración forzada para obligar al móvil a mostrar la cámara
         const widget = cloudinary.createUploadWidget({
             cloudName: 'dllkhcwzt',
             uploadPreset: 'licencias vencidas',
-            sources: ['camera'], // FUENTE ÚNICA: CÁMARA
-            showAdvancedOptions: false, // Desactivamos opciones avanzadas para que no salga "Browse"
+            // Definimos el orden de las fuentes: Cámara primero, luego archivos
+            sources: ['camera', 'local'], 
+            // Esto es lo que rompe el bloqueo de "My Files"
+            showAdvancedOptions: true, 
             clientAllowedFormats: ["jpg", "jpeg", "png"],
-            // Parámetro técnico: captura el entorno (cámara trasera) y lo fuerza
+            // Parámetros críticos para forzar hardware
             cameraParameters: { capture: 'environment' }
         }, (error, result) => {
             if (!error && result && result.event === "success") {
